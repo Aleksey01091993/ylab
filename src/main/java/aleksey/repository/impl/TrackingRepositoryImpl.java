@@ -32,12 +32,11 @@ public class TrackingRepositoryImpl implements TrackingRepository {
 
     @Override
     public Tracking add(Person person, Tracking tracking) {
-        if (!this.tracking.containsKey(person.getEmail())) {
-            return null;
-        } else {
+        if (this.tracking.containsKey(person.getEmail())) {
             this.tracking.get(person.getEmail()).add(tracking);
             return tracking;
         }
+        return null;
     }
 
     @Override
