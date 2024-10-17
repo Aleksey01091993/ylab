@@ -1,6 +1,6 @@
 package aleksey.services.impl;
 
-import aleksey.getimpstatic.Manager;
+import aleksey.utils.Manager;
 import aleksey.model.Habit;
 import aleksey.model.Person;
 import aleksey.services.HabitService;

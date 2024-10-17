@@ -1,4 +1,4 @@
-package aleksey.getimpstatic;
+package aleksey.utils;
 
 import aleksey.repository.HabitRepository;
 import aleksey.repository.PersonRepository;

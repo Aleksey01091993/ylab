@@ -1,6 +1,6 @@
 package aleksey.concoleinterface;
 
-import aleksey.getimpstatic.Manager;
+import aleksey.utils.Manager;
 import aleksey.model.Person;
 import aleksey.model.Tracking;
 import aleksey.services.HabitService;
