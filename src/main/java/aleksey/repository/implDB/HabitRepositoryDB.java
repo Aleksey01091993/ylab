@@ -27,7 +27,7 @@ public class HabitRepositoryDB implements HabitRepository {
             """;
 
     private static final String UPDATE_SQL = """
-            UPDATE habit.habit SET name = ?, description = ?, create_date = ?, frequency = ?, user_email = ?
+            UPDATE habit.habit SET name = ?, description = ?, frequency = ?
                    WHERE name = ? AND user_email = ?;
             """;
 
@@ -126,27 +126,26 @@ public class HabitRepositoryDB implements HabitRepository {
         }
         try(var connection = ConnectionManager.get();
             var statement = connection.prepareStatement(UPDATE_SQL)) {
-            if (person.getName() != null) {
-                statement.setString(1, person.getName());
+            if (habit.getName() != null) {
+                statement.setString(1, habit.getName());
             } else {
-                statement.setString(1, updatedPerson.getName());
+                statement.setString(1, habit.getName());
             }
-            if (person.getEmail() != null) {
-                statement.setString(2, person.getEmail());
+            if (habit.getDescription() != null) {
+                statement.setString(2, habit.getDescription());
             } else {
-                statement.setString(2, updatedPerson.getEmail());
+                statement.setString(2, updatedHabit.getDescription());
             }
-            if (person.getPassword() != null) {
-                statement.setString(3, person.getPassword());
+            if (habit.getFrequency() != null) {
+                statement.setString(3, habit.getFrequency());
             } else {
-                statement.setString(3, updatedPerson.getPassword());
+                statement.setString(3, updatedHabit.getFrequency());
             }
             statement.executeUpdate();
-            return person;
+            return updatedHabit;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return null;
     }
 
     @Override
