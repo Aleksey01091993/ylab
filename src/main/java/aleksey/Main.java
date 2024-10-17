@@ -1,17 +1,14 @@
 package aleksey;
 
-import aleksey.concoleinterface.MainMenu;
-import aleksey.utils.ConnectionManager;
+import aleksey.utils.LiquibaseManager;
 
 public class Main {
 
     public static void main(String[] args) throws Exception {
         //MainMenu mainMenu = new MainMenu();
         //mainMenu.start();
+        LiquibaseManager.updateDataBase();
 
-        try(var connection = ConnectionManager.open()) {
-            System.out.println(connection.getTransactionIsolation());
-        }
     }
 
 
