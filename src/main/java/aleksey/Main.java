@@ -1,14 +1,11 @@
 package aleksey;
 
-import aleksey.utils.LiquibaseManager;
+import aleksey.utils.QuickStart;
 
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        //MainMenu mainMenu = new MainMenu();
-        //mainMenu.start();
-        LiquibaseManager.updateDataBase();
-
+        QuickStart.startInDB();
     }
 
 

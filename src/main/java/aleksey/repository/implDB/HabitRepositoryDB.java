@@ -34,6 +34,9 @@ public class HabitRepositoryDB implements HabitRepository {
     private static final String GET_SQL = """
             SELECT name, description, create_date, frequency FROM habit.habit WHERE user_email = ? AND name = ?;
             """;
+    private static final String GET_HABITS_NAME = """
+            SELECT name FROM habit.habit WHERE user_email = ?;
+            """;
 
     private HabitRepositoryDB() {
     }
@@ -150,7 +153,17 @@ public class HabitRepositoryDB implements HabitRepository {
 
     @Override
     public List<String> getHabitsName(String personEmail) {
-        return List.of();
+        try (var connection = ConnectionManager.get();
+             var statement = connection.prepareStatement(GET_ALL_SQL)) {
+            var result = statement.executeQuery();
+            List<String> habitsName = new ArrayList<>();
+            while (result.next()) {
+                habitsName.add(result.getString("name"));
+            }
+            return habitsName;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static HabitRepositoryDB getInstance() {

@@ -1,9 +1,11 @@
 package aleksey.services.impl;
 
-import aleksey.utils.Manager;
 import aleksey.model.Person;
 import aleksey.model.Tracking;
+import aleksey.repository.TrackingRepository;
+import aleksey.services.HabitService;
 import aleksey.services.TrackingService;
+import aleksey.utils.Manager;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -15,14 +17,22 @@ public class TrackingServiceImpl implements TrackingService {
         return Manager.nextLine();
     }
 
+    private final TrackingRepository trackingRepository;
+    private final HabitService habitService;
+
+    public TrackingServiceImpl(HabitService habitService, TrackingRepository trackingRepository) {
+        this.habitService = habitService;
+        this.trackingRepository = trackingRepository;
+    }
+
     @Override
     public void newPerson(Person person) {
-        Manager.isMemoryTrackingRepository().newPerson(person);
+        trackingRepository.newPerson(person);
     }
 
     @Override
     public void removePerson(String email) {
-        Manager.isMemoryTrackingRepository().removePerson(email);
+        trackingRepository.removePerson(email);
     }
 
     @Override
@@ -38,7 +48,7 @@ public class TrackingServiceImpl implements TrackingService {
             }
         }
         Tracking tracking = new Tracking(person.getName(), name);
-        Manager.isMemoryTrackingRepository().add(person, tracking);
+        trackingRepository.add(person, tracking);
         System.out.println("the mark is marked");
         return tracking;
     }
@@ -47,7 +57,7 @@ public class TrackingServiceImpl implements TrackingService {
     public void getAllTrackingAndHabitName(Person person) {
         System.out.println("Enter the name of the habit for which you want to view the progress history.");
         String name = hasNextString();
-        List<Tracking> trackings = Manager.isMemoryTrackingRepository().getTrackingAndHabitName(person, name);
+        List<Tracking> trackings = trackingRepository.getTrackingAndHabitName(person, name);
         if (trackings.isEmpty()) {
             System.out.println("The execution history was not found.");
         } else {
@@ -71,7 +81,7 @@ public class TrackingServiceImpl implements TrackingService {
             start = LocalDate.parse(period.split(":")[0]);
             end = LocalDate.parse(period.split(":")[1]);
         }
-        List<Tracking> statistics = Manager.isMemoryTrackingRepository().getStatistic(person, start, end);
+        List<Tracking> statistics = trackingRepository.getStatistic(person, start, end);
         if (statistics.isEmpty()) {
             System.out.println("The execution history was not found.");
         } else {
@@ -81,7 +91,7 @@ public class TrackingServiceImpl implements TrackingService {
 
     @Override
     public void getCurrentHabit(Person person) {
-        List<Tracking> currentHabit = Manager.isMemoryTrackingRepository().getCurrentTracking(person);
+        List<Tracking> currentHabit = trackingRepository.getCurrentTracking(person);
         if (currentHabit.isEmpty()) {
             System.out.println("The execution history was not found.");
         } else {
@@ -105,11 +115,11 @@ public class TrackingServiceImpl implements TrackingService {
             start = LocalDate.parse(period.split(":")[0]);
             end = LocalDate.parse(period.split(":")[1]);
         }
-        List<Tracking> statistics = Manager.isMemoryTrackingRepository().getStatistic(person, start, end);
+        List<Tracking> statistics = trackingRepository.getStatistic(person, start, end);
         if (statistics.isEmpty()) {
             System.out.println("The execution history was not found.");
         } else {
-            List<String> habits = Manager.isMemoryHabitRepository().getHabitsName(person.getEmail());
+            List<String> habits = habitService.getHabitsName(person.getEmail());
             for (String habit : habits) {
                 System.out.println("The statistics for this stage according to the habit of " +
                         habit +
@@ -123,11 +133,11 @@ public class TrackingServiceImpl implements TrackingService {
 
     @Override
     public void getAllTracking(Person person) {
-        Manager.isMemoryTrackingRepository().getAllTracking(person).forEach(System.out::println);
+        trackingRepository.getAllTracking(person).forEach(System.out::println);
     }
 
     private Boolean isHabit(Person person, String habitName) {
-        return Manager.isMemoryHabitRepository().getHabit(person.getEmail(), habitName) == null;
+        return habitService.getHabit(person.getEmail(), habitName) == null;
     }
 
 }

@@ -54,7 +54,7 @@
             <column name="habit_name" type="varchar(55)">
                 <constraints nullable="false"/>
             </column>
-            <column name="date_crete" type="date">
+            <column name="date_create" type="date">
                 <constraints nullable="false"/>
             </column>
             <column name="is_mark" type="boolean">

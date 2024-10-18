@@ -16,6 +16,13 @@ public class Tracking {
         this.isMark = true;
     }
 
+    public Tracking(LocalDate date, String habitName, Boolean isMark, String personEmail) {
+        this.date = date;
+        this.habitName = habitName;
+        this.isMark = isMark;
+        this.personEmail = personEmail;
+    }
+
     public LocalDate getDate() {
         return date;
     }
