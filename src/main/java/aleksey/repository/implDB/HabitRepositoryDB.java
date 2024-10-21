@@ -144,6 +144,8 @@ public class HabitRepositoryDB implements HabitRepository {
             } else {
                 statement.setString(3, updatedHabit.getFrequency());
             }
+            statement.setString(4, habit.getName());
+            statement.setString(5, personEmail);
             statement.executeUpdate();
             return updatedHabit;
         } catch (SQLException e) {

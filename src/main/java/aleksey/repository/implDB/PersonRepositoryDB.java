@@ -4,9 +4,10 @@ import aleksey.model.Person;
 import aleksey.repository.PersonRepository;
 import aleksey.utils.ConnectionManager;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
-public class PersonRepositoryDB implements PersonRepository {
+public final class PersonRepositoryDB implements PersonRepository {
 
     private static final PersonRepositoryDB INSTANCE = new PersonRepositoryDB();
     private static final String CREATE_SQL = """
@@ -46,7 +47,11 @@ public class PersonRepositoryDB implements PersonRepository {
             var statement = connection.prepareStatement(GET_PASSWORD_SQL)) {
             statement.setString(1, email);
             var result = statement.executeQuery();
-            return result.getString("password");
+            String password = null;
+            if (result.next()) {
+                password = result.getString("password");
+            }
+            return password;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -75,6 +80,7 @@ public class PersonRepositoryDB implements PersonRepository {
             } else {
                 statement.setString(3, updatedPerson.getPassword());
             }
+            statement.setString(4, email);
             statement.executeUpdate();
             return person;
         } catch (SQLException e) {
