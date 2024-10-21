@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        logicalFilePath="db.changelog.xml"
+>
+    <changeSet id="V-1.0.1" author="Aleksey">
+        <createSequence sequenceName="user_id"/>
+        <createSequence sequenceName="tracking_id"/>
+        <createSequence sequenceName="habit_id"/>
+        <createTable tableName="users" schemaName="habit">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="user_id">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(55)"/>
+            <column name="email" type="varchar(55)">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="password" type="varchar(55)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="habit" schemaName="habit">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="habit_id">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(55)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="frequency" type="varchar(55)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_email" type="varchar(55)">
+                <constraints nullable="false" referencedTableSchemaName="habit" referencedTableName="users" referencedColumnNames="email"
+                foreignKeyName="user_email"/>
+            </column>
+        </createTable>
+        <createTable tableName="tracking" schemaName="habit">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="tracking_id">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_email" type="VARCHAR(55)">
+                <constraints nullable="false" referencedTableSchemaName="habit" referencedTableName="users" referencedColumnNames="email"
+                             foreignKeyName="user_email"/>
+            </column>
+            <column name="habit_name" type="varchar(55)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_create" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_mark" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

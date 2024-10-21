@@ -1,13 +1,21 @@
 package aleksey.services.impl;
 
-import aleksey.getimpstatic.Manager;
 import aleksey.model.Habit;
 import aleksey.model.Person;
+import aleksey.repository.HabitRepository;
 import aleksey.services.HabitService;
+import aleksey.utils.Manager;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class HabitServiceImpl implements HabitService {
+
+    private final HabitRepository habitRepository;
+
+    public HabitServiceImpl(HabitRepository habitRepository) {
+        this.habitRepository = habitRepository;
+    }
 
     private String hasNextString() {
         return Manager.nextLine();
@@ -15,13 +23,14 @@ public class HabitServiceImpl implements HabitService {
 
     @Override
     public void removePerson(String email) {
-        Manager.isMemoryHabitRepository().removePerson(email);
+        habitRepository.removePerson(email);
     }
 
     @Override
     public void newPerson(Person person) {
-        Manager.isMemoryHabitRepository().newPerson(person);
+        habitRepository.newPerson(person);
     }
+
 
     @Override
     public void createHabit(Person person) {
@@ -41,14 +50,14 @@ public class HabitServiceImpl implements HabitService {
         } else if (frequency.equals("2")) {
             frequency = "days";
         }
-        Habit habit = Manager.isMemoryHabitRepository().createHabit(person.getEmail(), new Habit(LocalDate.now(), description, frequency, name));
+        Habit habit = habitRepository.createHabit(person.getEmail(), new Habit(LocalDate.now(), description, frequency, name));
         while (habit == null) {
             System.out.println("There is already a habit with this name. Repeat the input.");
             name = hasNextString();
             if (name.equals("0")) {
                 return;
             } else {
-                habit = Manager.isMemoryHabitRepository().createHabit(person.getEmail(), new Habit(LocalDate.now(), description, frequency, name));
+                habit = habitRepository.createHabit(person.getEmail(), new Habit(LocalDate.now(), description, frequency, name));
             }
         }
     }
@@ -56,13 +65,13 @@ public class HabitServiceImpl implements HabitService {
     @Override
     public void removeHabit(Person person) {
         System.out.println("enter the name of the habit you want to delete");
-        Manager.isMemoryHabitRepository().removeHabit(person.getEmail(), hasNextString());
+        habitRepository.removeHabit(person.getEmail(), hasNextString());
     }
 
     @Override
     public void updateHabit(Person person) {
         System.out.println("Enter habit name: ");
-        Habit habit = Manager.isMemoryHabitRepository().getHabit(person.getEmail(), hasNextString());
+        Habit habit = habitRepository.getHabit(person.getEmail(), hasNextString());
         if (habit == null) {
             System.out.println("No personal habits found");
         } else {
@@ -73,11 +82,11 @@ public class HabitServiceImpl implements HabitService {
         String value = hasNextString();
         if (value.equals("1")) {
             System.out.println("Enter new habit name: ");
-            Manager.isMemoryHabitRepository().updateHabit(person.getEmail(), habit, hasNextString());
+            habitRepository.updateHabit(person.getEmail(), habit, hasNextString());
         } else if (value.equals("2")) {
             System.out.println("Enter new habit description: ");
             habit.setDescription(hasNextString());
-            Manager.isMemoryHabitRepository().updateHabit(person.getEmail(), habit, habit.getName());
+            habitRepository.updateHabit(person.getEmail(), habit, habit.getName());
         } else if (value.equals("3")) {
             System.out.println("Enter new habit habitFrequency: ");
             System.out.println("habitFrequency: \n 1. week \n 2. days");
@@ -92,13 +101,23 @@ public class HabitServiceImpl implements HabitService {
                 habitFrequency = "days";
             }
             habit.setFrequency(habitFrequency);
-            Manager.isMemoryHabitRepository().updateHabit(person.getEmail(), habit, habit.getName());
+            habitRepository.updateHabit(person.getEmail(), habit, habit.getName());
         }
     }
 
     @Override
     public void printHabits(Person person) {
-        Manager.isMemoryHabitRepository().getHabits(person.getEmail()).forEach(System.out::println);
+        habitRepository.getHabits(person.getEmail()).forEach(System.out::println);
+    }
+
+    @Override
+    public Habit getHabit(String email, String name) {
+        return habitRepository.getHabit(email, name);
+    }
+
+    @Override
+    public List<String> getHabitsName(String email) {
+        return habitRepository.getHabitsName(email);
     }
 
 }

@@ -1,17 +1,23 @@
 package aleksey.concoleinterface;
 
-import aleksey.getimpstatic.Manager;
 import aleksey.model.Person;
 import aleksey.model.Tracking;
 import aleksey.services.HabitService;
 import aleksey.services.PersonService;
 import aleksey.services.TrackingService;
+import aleksey.utils.Manager;
 
 public class MainMenu {
 
-    private final PersonService personService = Manager.personService();
-    private final HabitService habitService = Manager.habitService();
-    private final TrackingService trackingService = Manager.trackingService();
+    private final PersonService personService;
+    private final HabitService habitService;
+    private final TrackingService trackingService;
+
+    public MainMenu(HabitService habitService, PersonService personService, TrackingService trackingService) {
+        this.habitService = habitService;
+        this.personService = personService;
+        this.trackingService = trackingService;
+    }
 
     private String hasNextString() {
         return Manager.nextLine();
